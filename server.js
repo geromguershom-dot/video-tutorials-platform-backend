@@ -9,6 +9,7 @@ const videoRoutes = require('./routes/videoRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 const ratingRoutes = require('./routes/ratingRoutes');
+const playlistRoutes = require('./routes/playlistRoutes');
 
 connectDB();
 
@@ -30,6 +31,7 @@ app.use('/api/videos', videoRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/ratings', ratingRoutes);
+app.use('/api/playlists', playlistRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
