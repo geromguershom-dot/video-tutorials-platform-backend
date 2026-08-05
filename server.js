@@ -10,6 +10,7 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 const ratingRoutes = require('./routes/ratingRoutes');
 const playlistRoutes = require('./routes/playlistRoutes');
+const progressRoutes = require('./routes/progressRoutes');
 
 connectDB();
 
@@ -32,6 +33,7 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/ratings', ratingRoutes);
 app.use('/api/playlists', playlistRoutes);
+app.use('/api/progress', progressRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
