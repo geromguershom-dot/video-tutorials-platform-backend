@@ -4,18 +4,31 @@ const commentSchema = new mongoose.Schema(
   {
     content: {
       type: String,
-      required: [true, 'Le contenu du commentaire est requis'],
+      required: [true, 'Le contenu est requis'],
       trim: true,
+    },
+    type: {
+      type: String,
+      enum: ['comment', 'question'],
+      default: 'comment',
     },
     video: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Video',
-      required: true,
+    },
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category',
     },
     author: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
+    },
+    parentQuestion: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comment',
+      default: null,
     },
   },
   { timestamps: true }

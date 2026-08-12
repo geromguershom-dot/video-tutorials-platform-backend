@@ -22,7 +22,7 @@ exports.createComment = async (req, res) => {
 // @route GET /api/comments/video/:videoId
 exports.getCommentsByVideo = async (req, res) => {
   try {
-    const comments = await Comment.find({ video: req.params.videoId })
+    const comments = await Comment.find({ video: req.params.videoId, type: 'comment' })
       .populate('author', 'name role avatar')
       .sort({ createdAt: -1 });
 
@@ -47,6 +47,74 @@ exports.deleteComment = async (req, res) => {
 
     await comment.deleteOne();
     res.json({ message: 'Commentaire supprimé' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @route POST /api/comments/question
+exports.createQuestion = async (req, res) => {
+  try {
+    const { content, category } = req.body;
+
+    const question = await Comment.create({
+      content,
+      type: 'question',
+      category,
+      author: req.user._id,
+    });
+
+    const populated = await question.populate('author', 'name role avatar');
+    res.status(201).json(populated);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @route GET /api/comments/questions/:categoryId
+exports.getQuestionsByCategory = async (req, res) => {
+  try {
+    const questions = await Comment.find({
+      category: req.params.categoryId,
+      type: 'question',
+      parentQuestion: null,
+    })
+      .populate('author', 'name role avatar')
+      .sort({ createdAt: -1 });
+
+    res.json(questions);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @route POST /api/comments/answer
+exports.createAnswer = async (req, res) => {
+  try {
+    const { content, parentQuestion } = req.body;
+
+    const answer = await Comment.create({
+      content,
+      type: 'question',
+      parentQuestion,
+      author: req.user._id,
+    });
+
+    const populated = await answer.populate('author', 'name role avatar');
+    res.status(201).json(populated);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @route GET /api/comments/answers/:questionId
+exports.getAnswers = async (req, res) => {
+  try {
+    const answers = await Comment.find({ parentQuestion: req.params.questionId })
+      .populate('author', 'name role avatar')
+      .sort({ createdAt: 1 });
+
+    res.json(answers);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
